@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('usuarios', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre');
+            $table->string('numeroidentidad')->unique();
+            $table->string('localidad');
+            $table->string('direccion');
+            $table->string('correo')->unique();
+            $table->string('numerocelular');
+            $table->string('password'); // Laravel espera "password"
+            $table->string('rol')->default('usuario');
+            $table->boolean('estadosuscripcion')->default(false);
+            $table->date('fecharegistro')->nullable();
             $table->timestamps();
         });
     }
