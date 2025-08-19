@@ -9,4 +9,9 @@ class TipoResiduo extends Model
     protected $table = 'tiporesiduo';
     protected $primaryKey = 'idResiduo';
     public $timestamps = false;
+
+    public function recolectora()
+    {
+       return $this->belongsToMany(Recolectora::class, 'recolectoraresiduo', 'idResiduo', 'nitRecolectora');
+    }
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-08-2025 a las 06:38:41
+-- Tiempo de generación: 19-08-2025 a las 02:29:37
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -94,6 +94,26 @@ CREATE TABLE `recolectora` (
 
 INSERT INTO `recolectora` (`nit`, `direccion`) VALUES
 ('1', 'Campo Amor Cll 7 #45-89');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `recolectoraresiduo`
+--
+
+CREATE TABLE `recolectoraresiduo` (
+  `id` int(11) NOT NULL,
+  `nitRecolectora` varchar(15) NOT NULL,
+  `idResiduo` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `recolectoraresiduo`
+--
+
+INSERT INTO `recolectoraresiduo` (`id`, `nitRecolectora`, `idResiduo`) VALUES
+(1, '1', '1'),
+(2, '1', '2');
 
 -- --------------------------------------------------------
 
@@ -212,6 +232,14 @@ ALTER TABLE `recolectora`
   ADD PRIMARY KEY (`nit`);
 
 --
+-- Indices de la tabla `recolectoraresiduo`
+--
+ALTER TABLE `recolectoraresiduo`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nitRecolectora` (`nitRecolectora`,`idResiduo`),
+  ADD KEY `idResiduo` (`idResiduo`);
+
+--
 -- Indices de la tabla `solicitud`
 --
 ALTER TABLE `solicitud`
@@ -250,6 +278,12 @@ ALTER TABLE `notificacion`
   MODIFY `idNotificacion` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `recolectoraresiduo`
+--
+ALTER TABLE `recolectoraresiduo`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `solicitud`
 --
 ALTER TABLE `solicitud`
@@ -276,6 +310,13 @@ ALTER TABLE `notificacion`
 --
 ALTER TABLE `recolectora`
   ADD CONSTRAINT `recolectora_ibfk_1` FOREIGN KEY (`nit`) REFERENCES `persona` (`numeroIdentidad`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `recolectoraresiduo`
+--
+ALTER TABLE `recolectoraresiduo`
+  ADD CONSTRAINT `recolectoraresiduo_ibfk_1` FOREIGN KEY (`nitRecolectora`) REFERENCES `recolectora` (`nit`) ON DELETE CASCADE,
+  ADD CONSTRAINT `recolectoraresiduo_ibfk_2` FOREIGN KEY (`idResiduo`) REFERENCES `tiporesiduo` (`idResiduo`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `solicitud`
