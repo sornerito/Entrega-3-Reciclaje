@@ -1,18 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReportesController;
+use App\Models\User;
+use App\Models\Reporte;
+
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-use App\Http\Controllers\ReportesController;
-
+// Muestra la vista principal de reportes
 Route::get('/reportes', function () {
-    return view('reportes');
+    return view('reportes.principal');
 });
 
-Route::get('/reportes/usuario', [ReportesController::class, 'reporteUsuario']);
-Route::get('/reportes/todos', [ReportesController::class, 'reporteTodosUsuarios']);
-Route::get('/reportes/recolectora', [ReportesController::class, 'reporteRecolectora']);
+// Rutas de reportes específicas, con nombres de método corregidos
 Route::get('/reportes/usuario', [ReportesController::class, 'mostrarReporteUsuario'])->name('reportes.usuario');
+Route::get('/reportes/todos', [ReportesController::class, 'reporteTodosUsuarios']); // Si este metodo existe en el controlador
+Route::get('/reportes/recolectora', [ReportesController::class, 'reporteRecolectora']); // Si este metodo existe en el controlador
+
