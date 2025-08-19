@@ -7,6 +7,25 @@ use Illuminate\Support\Facades\DB;
 
 class CrearSolicitudController extends Controller
 {
+    public function index()
+    {
+        $numeroIdentidad = '1234992547'; // Por ahora hardcoded, después lo tomarás del usuario autenticado
+        
+        $solicitudes = DB::table('Solicitud')
+            ->leftJoin('SolicitudInorganica', 'Solicitud.idSolicitud', '=', 'SolicitudInorganica.idSolicitud')
+            ->join('TipoResiduo', 'Solicitud.idResiduo', '=', 'TipoResiduo.idResiduo')
+            ->where('numeroIdentidadUsuario', $numeroIdentidad)
+            ->select(
+                'Solicitud.*',
+                'SolicitudInorganica.pesoKg',
+                'TipoResiduo.nombre as tipoResiduo'
+            )
+            ->orderBy('fechaRegistro', 'desc')
+            ->get();
+
+        return view('mis-solicitudes', compact('solicitudes'));
+    }
+
     // Mostrar formulario con residuos
     public function create()
     {
@@ -24,20 +43,22 @@ class CrearSolicitudController extends Controller
         $request->validate([
             'fechaRecoleccion' => 'required|date',
             'idResiduo' => 'required|integer',
-            'numeroIdentidadUsuario' => 'required|string',
             'pesoKg' => 'nullable|numeric|min:0',
+            'notasAdicionales' => 'nullable|string',
         ]);
 
         try {
             DB::beginTransaction();
 
+            $numeroIdentidad = '1234992547';
             // Insertar la solicitud en la tabla "Solicitud"
             $idSolicitud = DB::table('Solicitud')->insertGetId([
                 'fechaRegistro' => now(),
                 'fechaRecoleccion' => $request->fechaRecoleccion,
-                'estado' => 'pendiente', // siempre pendiente al crear
+                'estado' => 'pendiente',
                 'idResiduo' => $request->idResiduo,
-                'numeroIdentidadUsuario' => $request->numeroIdentidadUsuario,
+                'numeroIdentidadUsuario' => $numeroIdentidad,
+                'notasAdicionales' => $request->notasAdicionales,
             ], 'idSolicitud');
 
             // Si el residuo es inorgánico, insertar en la tabla "SolicitudInorganica"
@@ -51,17 +72,16 @@ class CrearSolicitudController extends Controller
             DB::commit();
 
             return response()->json([
-                'message' => 'Solicitud creada correctamente',
-                'idSolicitud' => $idSolicitud
-            ], 201);
+                'status' => 'success',
+                'message' => 'Solicitud creada correctamente'
+            ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-
             return response()->json([
-                'message' => 'Error al crear la solicitud',
-                'error' => $e->getMessage()
-            ], 500);
+                'status' => 'error',
+                'message' => 'Error al crear la solicitud: ' . $e->getMessage()
+            ]);
         }
     }
 }

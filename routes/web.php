@@ -8,5 +8,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/nueva-solicitud', [CrearSolicitudController::class, 'create']);
-Route::post('/nueva-solicitud', [CrearSolicitudController::class, 'store']);
+// Rutas para solicitudes
+Route::get('/nueva-solicitud', [CrearSolicitudController::class, 'create'])->name('solicitud.create');
+Route::post('/nueva-solicitud', [CrearSolicitudController::class, 'store'])->name('solicitud.store');
+Route::get('/mis-solicitudes', [CrearSolicitudController::class, 'index'])->name('mis-solicitudes');
